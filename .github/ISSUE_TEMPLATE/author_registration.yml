@@ -1,0 +1,107 @@
+name: 📝 블로그 작성자 등록 신청
+description: Hugging Face KREW 블로그에 글을 작성하고 싶으신가요? 작성자로 등록해보세요!
+title: "[작성자 등록] "
+labels: ["author-registration"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🤗 Hugging Face KREW 블로그 작성자 등록
+        
+        안녕하세요! Hugging Face KREW 블로그에 관심을 가져주셔서 감사합니다.
+        
+        아래 정보를 정확히 입력해주시면, 자동으로 PR이 생성되어 작성자로 등록됩니다.
+        사진 업로드를 제외한 모든 필드는 필수입니다. ✨
+
+  - type: input
+    id: author_key
+    attributes:
+      label: "작성자 ID (영문)"
+      description: "블로그에서 사용할 고유 ID를 영문으로 입력해주세요. (예: chaewon, minju)"
+      placeholder: "minju"
+    validations:
+      required: true
+
+  - type: input
+    id: name
+    attributes:
+      label: "실명"
+      description: "본명을 영어로 입력해주세요. (예: Song Chaewon)"
+      placeholder: "Song Chaewon"
+    validations:
+      required: true
+
+  - type: input
+    id: display_name
+    attributes:
+      label: "표시 이름"
+      description: "블로그에 표시될 이름을 입력해주세요."
+      placeholder: "Chaewon"
+    validations:
+      required: true
+
+  - type: input
+    id: email
+    attributes:
+      label: "이메일 주소"
+      description: "연락 가능한 이메일 주소를 입력해주세요."
+      placeholder: "gildong@example.com"
+    validations:
+      required: true
+
+  - type: input
+    id: web
+    attributes:
+      label: "개인 웹사이트 또는 GitHub"
+      description: "개인 웹사이트, GitHub 프로필, LinkedIn등의 URL을 입력해주세요."
+      placeholder: "https://github.com/username"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "자기소개"
+      description: "간단한 자기소개를 작성해주세요. 블로그에 표시됩니다."
+      placeholder: "안녕하세요! AI/ML에 관심이 많은 개발자입니다. 🤗"
+      render: text
+    validations:
+      required: true
+
+  - type: dropdown
+    id: avatar_option
+    attributes:
+      label: "프로필 이미지 옵션"
+      description: "프로필 이미지를 어떻게 설정하시겠어요?"
+      options:
+        - "GitHub 프로필 이미지 사용"
+        - "직접 업로드 (이슈에 첨부)"
+        - "기본 이미지 사용"
+    validations:
+      required: true
+
+  - type: textarea
+    id: avatar_info
+    attributes:
+      label: "프로필 이미지 정보"
+      description: |
+        - **GitHub 프로필 이미지 사용**: GitHub 사용자명을 입력해주세요
+        - **직접 업로드**: 이 이슈에 이미지를 첨부해주세요 (JPG, PNG, 권장 크기: 200x200px)
+        - **기본 이미지 사용**: "기본 이미지 사용"이라고 입력해주세요
+      placeholder: "GitHub 사용자명을 입력하거나, 직접 업로드시에는 이미지를 첨부해주세요"
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        
+        ### 🔄 다음 단계
+        1. **이슈 제출** 후 자동으로 PR이 생성됩니다
+        2. **관리자 검토** 후 PR이 승인되면 작성자로 등록됩니다
+        3. **등록 완료** 후 블로그 글 작성을 시작할 수 있습니다
+        
+        궁금한 점이 있으시면 이 이슈에 댓글로 문의해주세요! 🤗
