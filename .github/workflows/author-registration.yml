@@ -152,15 +152,15 @@ jobs:
           cp _config.yml _config.yml.bak
           
           # 새 작성자 정보를 _config.yml에 추가
-          cat >> _config.yml << EOF
-  $author_key:
-    name: $name
-    display_name: $display_name
-    avatar: '$avatar_path'
-    email: $email
-    web: $web
-    description: "$description"
-EOF
+          {
+            echo "  $author_key:"
+            echo "    name: $name"
+            echo "    display_name: $display_name"
+            echo "    avatar: '$avatar_path'"
+            echo "    email: $email"
+            echo "    web: $web"
+            echo "    description: \"$description\""
+          } >> _config.yml
           
           echo "✅ _config.yml 업데이트 완료"
 
