@@ -1,0 +1,257 @@
+name: 📝 Author Registration Automation
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  process-author-registration:
+    # author-registration 라벨이 있는 이슈만 처리
+    if: contains(github.event.issue.labels.*.name, 'author-registration')
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    
+    steps:
+      - name: 📋 Extract Issue Information
+        id: extract
+        run: |
+          # 이슈 생성자 정보
+          echo "issue_author=${{ github.event.issue.user.login }}" >> $GITHUB_OUTPUT
+          echo "issue_number=${{ github.event.issue.number }}" >> $GITHUB_OUTPUT
+          echo "issue_title=${{ github.event.issue.title }}" >> $GITHUB_OUTPUT
+          
+          # 이슈 본문에서 데이터 추출을 위한 준비
+          echo "Extracting data from issue body..."
+
+      - name: 🔍 Parse Issue Body
+        id: parse
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issueBody = context.payload.issue.body;
+            
+            // 각 필드를 정규식으로 추출
+            function extractField(body, fieldName) {
+              const regex = new RegExp(`### ${fieldName}\\s*\\n\\s*([^\\n]+)`, 'i');
+              const match = body.match(regex);
+              return match ? match[1].trim() : '';
+            }
+            
+            // 드롭다운 선택값 추출 (특별 처리)
+            function extractDropdown(body, fieldName) {
+              const regex = new RegExp(`### ${fieldName}\\s*\\n\\s*([^\\n]+)`, 'i');
+              const match = body.match(regex);
+              return match ? match[1].trim() : '';
+            }
+            
+            const data = {
+              author_key: extractField(issueBody, '작성자 ID \\(영문\\)'),
+              name: extractField(issueBody, '실명'),
+              display_name: extractField(issueBody, '표시 이름'),
+              email: extractField(issueBody, '이메일 주소'),
+              web: extractField(issueBody, '개인 웹사이트 또는 GitHub'),
+              description: extractField(issueBody, '자기소개'),
+              avatar_option: extractDropdown(issueBody, '프로필 이미지 옵션')
+            };
+            
+            console.log('Extracted data:', data);
+            
+            // GitHub Actions 환경변수로 설정
+            for (const [key, value] of Object.entries(data)) {
+              core.setOutput(key, value);
+            }
+            
+            return data;
+
+      - name: ✅ Validate Required Fields
+        run: |
+          # 필수 필드 검증
+          if [ -z "${{ steps.parse.outputs.author_key }}" ]; then
+            echo "❌ Error: 작성자 ID가 필요합니다."
+            exit 1
+          fi
+          
+          if [ -z "${{ steps.parse.outputs.name }}" ]; then
+            echo "❌ Error: 실명이 필요합니다."
+            exit 1
+          fi
+          
+          if [ -z "${{ steps.parse.outputs.display_name }}" ]; then
+            echo "❌ Error: 표시 이름이 필요합니다."
+            exit 1
+          fi
+          
+          if [ -z "${{ steps.parse.outputs.email }}" ]; then
+            echo "❌ Error: 이메일 주소가 필요합니다."
+            exit 1
+          fi
+          
+          echo "✅ 모든 필수 필드가 입력되었습니다."
+
+      - name: 📂 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🖼️ Process Avatar Image
+        id: avatar
+        run: |
+          author_key="${{ steps.parse.outputs.author_key }}"
+          avatar_option="${{ steps.parse.outputs.avatar_option }}"
+          issue_author="${{ steps.extract.outputs.issue_author }}"
+          
+          echo "Processing avatar for: $author_key"
+          echo "Avatar option: $avatar_option"
+          echo "Issue author: $issue_author"
+          
+          if [[ "$avatar_option" == *"본인 GitHub 프로필 이미지 사용"* ]]; then
+            # 자동으로 이슈 생성자의 GitHub 프로필 이미지 사용
+            github_username="$issue_author"
+            echo "🤖 자동으로 이슈 생성자 프로필 이미지 사용: $github_username"
+            
+            # GitHub 프로필 이미지 다운로드
+            echo "📥 Downloading GitHub profile image..."
+            mkdir -p assets/images/author
+            
+            if curl -L "https://github.com/$github_username.png" -o "assets/images/author/$author_key.png"; then
+              echo "✅ GitHub 프로필 이미지 다운로드 완료"
+              echo "avatar_path=assets/images/author/$author_key.png" >> $GITHUB_OUTPUT
+            else
+              echo "❌ GitHub 프로필 이미지 다운로드 실패, 기본 이미지 사용"
+              echo "avatar_path=assets/images/logo.png" >> $GITHUB_OUTPUT
+            fi
+            
+          elif [[ "$avatar_option" == *"직접 업로드"* ]]; then
+            echo "📎 직접 업로드 옵션 선택됨"
+            echo "🔄 이슈 첨부파일에서 이미지를 찾는 중..."
+            # TODO: 이슈 첨부파일 처리 로직 (향후 구현)
+            echo "avatar_path=assets/images/logo.png" >> $GITHUB_OUTPUT
+            
+          else
+            echo "🖼️ 기본 이미지 사용"
+            echo "avatar_path=assets/images/logo.png" >> $GITHUB_OUTPUT
+          fi
+
+      - name: ⚙️ Update _config.yml
+        run: |
+          author_key="${{ steps.parse.outputs.author_key }}"
+          name="${{ steps.parse.outputs.name }}"
+          display_name="${{ steps.parse.outputs.display_name }}"
+          email="${{ steps.parse.outputs.email }}"
+          web="${{ steps.parse.outputs.web }}"
+          description="${{ steps.parse.outputs.description }}"
+          avatar_path="${{ steps.avatar.outputs.avatar_path }}"
+          
+          echo "📝 Updating _config.yml with new author..."
+          
+          # _config.yml 백업
+          cp _config.yml _config.yml.bak
+          
+          # 새 작성자 정보를 _config.yml에 추가
+          cat >> _config.yml << EOF
+  $author_key:
+    name: $name
+    display_name: $display_name
+    avatar: '$avatar_path'
+    email: $email
+    web: $web
+    description: "$description"
+EOF
+          
+          echo "✅ _config.yml 업데이트 완료"
+
+      - name: 🔧 Create Pull Request
+        id: create_pr
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "feat: Add new author ${{ steps.parse.outputs.author_key }}"
+          title: "✨ 새 작성자 등록: ${{ steps.parse.outputs.display_name }}"
+          body: |
+            ## 🤗 새 블로그 작성자 등록
+            
+            **이슈**: #${{ steps.extract.outputs.issue_number }}
+            **요청자**: @${{ steps.extract.outputs.issue_author }}
+            
+            ### 👤 작성자 정보
+            - **ID**: `${{ steps.parse.outputs.author_key }}`
+            - **이름**: ${{ steps.parse.outputs.name }}
+            - **표시명**: ${{ steps.parse.outputs.display_name }}
+            - **이메일**: ${{ steps.parse.outputs.email }}
+            - **웹사이트**: ${{ steps.parse.outputs.web }}
+            - **프로필 이미지**: `${{ steps.avatar.outputs.avatar_path }}`
+            
+            ### 📝 자기소개
+            > ${{ steps.parse.outputs.description }}
+            
+            ---
+            
+            이 PR이 승인되면 @${{ steps.extract.outputs.issue_author }}님이 블로그 작성자로 등록됩니다.
+            
+            자동 생성된 PR입니다. 🤖
+          branch: author-registration/${{ steps.parse.outputs.author_key }}
+          delete-branch: true
+
+      - name: 💬 Comment on Issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = '${{ steps.create_pr.outputs.pull-request-number }}';
+            const authorKey = '${{ steps.parse.outputs.author_key }}';
+            const displayName = '${{ steps.parse.outputs.display_name }}';
+            
+            if (prNumber) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `## 🎉 자동 처리 완료!
+            
+            안녕하세요 @${{ steps.extract.outputs.issue_author }}님! 
+            
+            작성자 등록 요청이 자동으로 처리되었습니다.
+            
+            ### 📋 생성된 내용
+            - **Pull Request**: #${prNumber}
+            - **작성자 ID**: \`${authorKey}\`
+            - **표시명**: ${displayName}
+            - **프로필 이미지**: ${{ steps.avatar.outputs.avatar_path }}
+            
+            ### 🔄 다음 단계
+            1. 관리자가 PR을 검토합니다
+            2. PR이 승인되면 작성자로 등록됩니다
+            3. 등록 완료 후 블로그 글 작성을 시작할 수 있습니다!
+            
+            감사합니다! 🤗`
+              });
+              
+              // 이슈에 라벨 추가
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                labels: ['processed', 'pending-review']
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `## ❌ 처리 중 오류 발생
+            
+            죄송합니다. 작성자 등록 처리 중 오류가 발생했습니다.
+            관리자에게 문의해주세요.`
+              });
+            }
+
+      - name: 🎯 Workflow Summary
+        run: |
+          echo "## 🎉 Author Registration Workflow 완료!" >> $GITHUB_STEP_SUMMARY
+          echo "- **작성자 ID**: ${{ steps.parse.outputs.author_key }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **표시명**: ${{ steps.parse.outputs.display_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **PR 번호**: #${{ steps.create_pr.outputs.pull-request-number }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **프로필 이미지**: ${{ steps.avatar.outputs.avatar_path }}" >> $GITHUB_STEP_SUMMARY
