@@ -138,13 +138,13 @@ jobs:
 
       - name: ⚙️ Update _config.yml
         run: |
-          author_key="${{ steps.parse.outputs.author_key }}"
-          name="${{ steps.parse.outputs.name }}"
-          display_name="${{ steps.parse.outputs.display_name }}"
-          email="${{ steps.parse.outputs.email }}"
-          web="${{ steps.parse.outputs.web }}"
-          description="${{ steps.parse.outputs.description }}"
-          avatar_path="${{ steps.avatar.outputs.avatar_path }}"
+          author_key='${{ steps.parse.outputs.author_key }}'
+          name='${{ steps.parse.outputs.name }}'
+          display_name='${{ steps.parse.outputs.display_name }}'
+          email='${{ steps.parse.outputs.email }}'
+          web='${{ steps.parse.outputs.web }}'
+          description='${{ steps.parse.outputs.description }}'
+          avatar_path='${{ steps.avatar.outputs.avatar_path }}'
           
           echo "📝 Updating _config.yml with new author..."
           
