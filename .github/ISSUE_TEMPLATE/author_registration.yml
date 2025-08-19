@@ -76,23 +76,11 @@ body:
       label: "프로필 이미지 옵션"
       description: "프로필 이미지를 어떻게 설정하시겠어요?"
       options:
-        - "GitHub 프로필 이미지 사용"
+        - "본인 GitHub 프로필 이미지 사용"
         - "직접 업로드 (이슈에 첨부)"
         - "기본 이미지 사용"
     validations:
       required: true
-
-  - type: textarea
-    id: avatar_info
-    attributes:
-      label: "프로필 이미지 정보"
-      description: |
-        - **GitHub 프로필 이미지 사용**: GitHub 사용자명을 입력해주세요
-        - **직접 업로드**: 이 이슈에 이미지를 첨부해주세요 (JPG, PNG, 권장 크기: 200x200px)
-        - **기본 이미지 사용**: "기본 이미지 사용"이라고 입력해주세요
-      placeholder: "GitHub 사용자명을 입력하거나, 직접 업로드시에는 이미지를 첨부해주세요"
-    validations:
-      required: false
 
   - type: markdown
     attributes:
