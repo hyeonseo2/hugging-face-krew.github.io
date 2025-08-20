@@ -238,18 +238,50 @@ jobs:
           
           echo "📝 Updating _config.yml with new author..."
           
-          # 새 작성자 정보를 _config.yml에 추가
+          # authors 섹션의 마지막 빈 줄을 찾아서 새 작성자 추가
+          # authors 섹션 다음 첫 번째 빈 줄을 찾기
+          authors_section_start=$(grep -n "^authors:" _config.yml | cut -d: -f1)
+          
+          if [ -z "$authors_section_start" ]; then
+            echo "❌ Error: authors 섹션을 찾을 수 없습니다."
+            exit 1
+          fi
+          
+          echo "🔍 authors 섹션 시작: line $authors_section_start"
+          
+          # authors 섹션 다음 첫 번째 빈 줄 찾기 (authors 다음 섹션 전까지)
+          empty_line=$(sed -n "${authors_section_start},\$p" _config.yml | grep -n "^$" | head -1 | cut -d: -f1)
+          
+          if [ -z "$empty_line" ]; then
+            echo "❌ Error: authors 섹션의 끝을 찾을 수 없습니다."
+            exit 1
+          fi
+          
+          # 실제 라인 번호 계산
+          insert_line=$((authors_section_start + empty_line - 1))
+          echo "🔍 삽입할 위치: line $insert_line"
+          
+          # 새 작성자 정보 생성 (올바른 들여쓰기로)
+          new_author_content="  $author_key:
+    name: $name
+    display_name: $display_name
+    avatar: '$avatar_path'
+    email: $email
+    web: $web
+    description: \"$description\""
+          
+          # 임시 파일 생성해서 지정된 위치에 삽입
           {
-            echo "  $author_key:"
-            echo "    name: $name"
-            echo "    display_name: $display_name"
-            echo "    avatar: '$avatar_path'"
-            echo "    email: $email"
-            echo "    web: $web"
-            echo "    description: \"$description\""
-          } >> _config.yml
+            head -n $((insert_line - 1)) _config.yml
+            echo "$new_author_content"
+            tail -n +$insert_line _config.yml
+          } > _config_temp.yml
+          
+          # 원본 파일 교체
+          mv _config_temp.yml _config.yml
           
           echo "✅ _config.yml 업데이트 완료"
+          echo "📍 새 작성자가 authors 섹션 내부에 추가되었습니다."
 
       - name: 🔧 Create Pull Request
         id: create_pr
