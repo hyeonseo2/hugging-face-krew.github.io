@@ -191,7 +191,7 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "feat: Add new author ${{ steps.parse.outputs.author_key }}"
+          commit-message: "✍️: 새 작성자 등록 ${{ steps.parse.outputs.author_key }} (#${{ steps.extract.outputs.issue_number }})"
           title: "✨ 새 작성자 등록: ${{ steps.parse.outputs.display_name }}"
           body: |
             ## 🤗 새 블로그 작성자 등록
