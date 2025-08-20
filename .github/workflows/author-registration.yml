@@ -262,16 +262,16 @@ jobs:
           echo "🔍 삽입할 위치: line $insert_line"
           
           # 새 작성자 정보 생성 (올바른 들여쓰기로)
-          # 임시 파일로 새 작성자 정보 생성
-          cat > new_author.tmp << EOF
-          $author_key:
-            name: $name
-            display_name: $display_name
-            avatar: '$avatar_path'
-            email: $email
-            web: $web
-            description: "$description"
-          EOF
+          # 직접 echo 방식으로 임시 파일 생성 (가장 안전한 방법)
+          {
+            echo "  $author_key:"
+            echo "    name: $name"
+            echo "    display_name: $display_name"
+            echo "    avatar: '$avatar_path'"
+            echo "    email: $email"
+            echo "    web: $web"
+            echo "    description: \"$description\""
+          } > new_author.tmp
           
           # 임시 파일 생성해서 지정된 위치에 삽입
           {
