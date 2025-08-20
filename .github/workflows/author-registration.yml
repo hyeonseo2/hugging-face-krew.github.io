@@ -139,15 +139,20 @@ jobs:
             # 다양한 GitHub 첨부파일 URL 패턴 시도
             echo "🔍 첨부파일 URL 패턴 검색 중..."
             
-            # 패턴 1: user-attachments/assets (최신)
-            image_url=$(echo "$issue_body" | grep -o 'https://github\.com/user-attachments/assets/[a-f0-9-]*\.[a-zA-Z]*' | head -1)
+            # 패턴 1: user-attachments/assets (최신) - 확장자 없이
+            image_url=$(echo "$issue_body" | grep -o 'https://github\.com/user-attachments/assets/[a-f0-9-]*' | head -1)
             
-            # 패턴 2: user-attachments/files (기존)
+            # 패턴 2: user-attachments/assets (확장자 포함)
+            if [ -z "$image_url" ]; then
+              image_url=$(echo "$issue_body" | grep -o 'https://github\.com/user-attachments/assets/[a-f0-9-]*\.[a-zA-Z]*' | head -1)
+            fi
+            
+            # 패턴 3: user-attachments/files (기존)
             if [ -z "$image_url" ]; then
               image_url=$(echo "$issue_body" | grep -o 'https://github\.com/user-attachments/files/[0-9]*/[^)]*\.[a-zA-Z]*' | head -1)
             fi
             
-            # 패턴 3: 일반적인 이미지 링크
+            # 패턴 4: 일반적인 이미지 링크
             if [ -z "$image_url" ]; then
               image_url=$(echo "$issue_body" | grep -o 'https://[^)]*\.\(png\|jpg\|jpeg\|gif\|webp\)' | head -1)
             fi
@@ -157,8 +162,15 @@ jobs:
             if [ ! -z "$image_url" ]; then
               echo "🎯 첨부 이미지 발견: $image_url"
               
-              # 파일 확장자 추출
-              file_ext=$(echo "$image_url" | sed 's/.*\.//')
+              # 파일 확장자 추출 (확장자가 없으면 png로 기본값 설정)
+              if [[ "$image_url" == *"."* ]]; then
+                file_ext=$(echo "$image_url" | sed 's/.*\.//')
+              else
+                file_ext="png"
+                echo "🔧 확장자 없음, 기본값 PNG 사용"
+              fi
+              
+              echo "📁 사용할 확장자: $file_ext"
               
               # 이미지 다운로드
               mkdir -p assets/images/author
