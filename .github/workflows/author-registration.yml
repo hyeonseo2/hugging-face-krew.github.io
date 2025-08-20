@@ -163,11 +163,14 @@ jobs:
               echo "🎯 첨부 이미지 발견: $image_url"
               
               # 파일 확장자 추출 (확장자가 없으면 png로 기본값 설정)
-              if [[ "$image_url" == *"."* ]]; then
-                file_ext=$(echo "$image_url" | sed 's/.*\.//')
-              else
+              # URL에서 파일 확장자만 추출 (2-4글자 확장자만)
+              file_ext=$(echo "$image_url" | grep -o '\.[a-zA-Z]\{2,4\}$' | sed 's/\.//')
+              
+              if [ -z "$file_ext" ]; then
                 file_ext="png"
                 echo "🔧 확장자 없음, 기본값 PNG 사용"
+              else
+                echo "🔧 추출된 확장자: $file_ext"
               fi
               
               echo "📁 사용할 확장자: $file_ext"
