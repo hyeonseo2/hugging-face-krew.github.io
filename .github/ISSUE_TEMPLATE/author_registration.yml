@@ -82,19 +82,25 @@ body:
     validations:
       required: true
 
+  - type: textarea
+    id: profile_image_upload
+    attributes:
+      label: "📸 프로필 이미지 첨부 (직접 업로드 선택 시)"
+      description: |
+        **"직접 업로드"를 선택하신 경우**, 이 영역에 이미지를 첨부해주세요.
+
+        **지원 형식**: PNG, JPG, JPEG, GIF, WebP (권장 크기: 200x200px)
+      placeholder: |
+        이미지를 여기에 드래그하거나 붙여넣기 해주세요...
+        
+        예시:
+        ![프로필이미지](이미지URL)
+    validations:
+      required: false
+
   - type: markdown
     attributes:
       value: |
-        ---
-        
-        ### 📸 프로필 이미지 첨부 방법
-        
-        **"직접 업로드"를 선택하신 경우**, 여기에 이미지를 드래그하거나 붙여넣기 해주세요:
-        
-        <!-- 이미지를 여기에 첨부해주세요 -->
-        
-        **지원 형식**: PNG, JPG, JPEG, GIF, WebP (권장 크기: 200x200px)
-        
         ---
         
         ### 🔄 다음 단계
