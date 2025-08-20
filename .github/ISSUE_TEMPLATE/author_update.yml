@@ -74,17 +74,28 @@ body:
       description: "프로필 이미지를 수정하시겠어요?"
       options:
         - "수정하지 않음"
-        - "GitHub 프로필 이미지로 변경"
-        - "직접 업로드로 변경"
+        - "본인 GitHub 프로필 이미지로 변경"
+        - "직접 업로드로 변경 (아래에 이미지 첨부)"
         - "기본 이미지로 변경"
     validations:
       required: true
 
   - type: textarea
-    id: avatar_info
+    id: profile_image_upload
     attributes:
-      label: "프로필 이미지 정보 (필요시에만)"
-      description: "GitHub 프로필 이미지로 변경 시 사용자명을 입력해주세요."
-      placeholder: "GitHub 사용자명 (옵션 선택시에만)"
+      label: "📸 프로필 이미지 첨부 (직접 업로드 변경 선택 시)"
+      description: |
+        **"직접 업로드로 변경"을 선택하신 경우**, 이 영역에 이미지를 첨부해주세요.
+        
+        **첨부 방법**: 
+        - 파일을 이 텍스트 영역으로 **드래그 앤 드롭**
+        - 클립보드에서 **Ctrl+V** (Mac: Cmd+V)로 붙여넣기
+        
+        **지원 형식**: PNG, JPG, JPEG, GIF, WebP (권장 크기: 200x200px)
+      placeholder: |
+        이미지를 여기에 드래그하거나 붙여넣기 해주세요...
+        
+        예시:
+        ![프로필이미지](이미지URL)
     validations:
       required: false

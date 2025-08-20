@@ -41,6 +41,24 @@ jobs:
               return match ? match[1].trim() : '';
             }
             
+            // 다중 줄 필드 추출 (description용)
+            function extractMultilineField(body, fieldName) {
+              const regex = new RegExp(`### ${fieldName}\\s*\\n([\\s\\S]*?)(?=\\n### |$)`, 'i');
+              const match = body.match(regex);
+              if (!match) return '';
+              
+              let content = match[1].trim();
+              
+              // 마크다운 코드 블록 제거 (```text ... ``` 또는 ``` ... ```)
+              content = content.replace(/^```[\w]*\s*\n?/, '').replace(/\n?```\s*$/, '');
+              
+              // 불필요한 공백과 줄바꿈 정리
+              content = content.trim();
+              
+              // 빈 문자열이면 기본값 반환
+              return content || '';
+            }
+            
             // 드롭다운 선택값 추출 (특별 처리)
             function extractDropdown(body, fieldName) {
               const regex = new RegExp(`### ${fieldName}\\s*\\n\\s*([^\\n]+)`, 'i');
@@ -54,11 +72,24 @@ jobs:
               display_name: extractField(issueBody, '표시 이름'),
               email: extractField(issueBody, '이메일 주소'),
               web: extractField(issueBody, '개인 웹사이트 또는 GitHub'),
-              description: extractField(issueBody, '자기소개'),
+              description: extractMultilineField(issueBody, '자기소개'),
               avatar_option: extractDropdown(issueBody, '프로필 이미지 옵션')
             };
             
             console.log('Extracted data:', data);
+            
+            // 디버깅: description 추출 과정 로그
+            console.log('Debug - Raw description match:', issueBody.match(/### 자기소개\s*\n([\s\S]*?)(?=\n### |$)/i));
+            console.log('Debug - Description processing steps:');
+            const rawDesc = issueBody.match(/### 자기소개\s*\n([\s\S]*?)(?=\n### |$)/i);
+            if (rawDesc) {
+              console.log('  1. Raw match:', JSON.stringify(rawDesc[1]));
+              let step = rawDesc[1].trim();
+              console.log('  2. After trim:', JSON.stringify(step));
+              step = step.replace(/^```[\w]*\s*\n?/, '').replace(/\n?```\s*$/, '');
+              console.log('  3. After code block removal:', JSON.stringify(step));
+              console.log('  4. Final result:', JSON.stringify(step.trim()));
+            }
             
             // GitHub Actions 환경변수로 설정
             for (const [key, value] of Object.entries(data)) {
