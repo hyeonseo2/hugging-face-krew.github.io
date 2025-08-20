@@ -132,8 +132,27 @@ jobs:
             # 이슈 본문에서 첨부 이미지 URL 추출
             issue_body='${{ github.event.issue.body }}'
             
-            # GitHub user-attachments URL 패턴 매칭
+            echo "🔍 Debug: 이슈 본문 내용 확인 중..."
+            echo "Issue body preview:"
+            echo "$issue_body" | head -20
+            
+            # 다양한 GitHub 첨부파일 URL 패턴 시도
+            echo "🔍 첨부파일 URL 패턴 검색 중..."
+            
+            # 패턴 1: user-attachments/assets (최신)
             image_url=$(echo "$issue_body" | grep -o 'https://github\.com/user-attachments/assets/[a-f0-9-]*\.[a-zA-Z]*' | head -1)
+            
+            # 패턴 2: user-attachments/files (기존)
+            if [ -z "$image_url" ]; then
+              image_url=$(echo "$issue_body" | grep -o 'https://github\.com/user-attachments/files/[0-9]*/[^)]*\.[a-zA-Z]*' | head -1)
+            fi
+            
+            # 패턴 3: 일반적인 이미지 링크
+            if [ -z "$image_url" ]; then
+              image_url=$(echo "$issue_body" | grep -o 'https://[^)]*\.\(png\|jpg\|jpeg\|gif\|webp\)' | head -1)
+            fi
+            
+            echo "🔍 검색된 이미지 URL: $image_url"
             
             if [ ! -z "$image_url" ]; then
               echo "🎯 첨부 이미지 발견: $image_url"
