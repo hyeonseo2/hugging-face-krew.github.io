@@ -60,13 +60,12 @@ body:
     validations:
       required: true
 
-  - type: textarea
+  - type: input
     id: description
     attributes:
       label: "자기소개"
-      description: "간단한 자기소개를 작성해주세요. 블로그에 표시됩니다."
+      description: "간단한 한 줄 자기소개를 작성해주세요. 블로그에 표시됩니다."
       placeholder: "안녕하세요! AI/ML에 관심이 많은 개발자입니다. 🤗"
-      render: text
     validations:
       required: true
 

@@ -58,11 +58,11 @@ body:
     validations:
       required: false
 
-  - type: textarea
+  - type: input
     id: description
     attributes:
       label: "자기소개 (수정 시에만 입력)"
-      description: "자기소개를 수정하려면 입력해주세요."
+      description: "자기소개를 수정하려면 한 줄로 입력해주세요."
       placeholder: "안녕하세요! AI/ML에 관심이 많은 개발자입니다. 🤗"
     validations:
       required: false
