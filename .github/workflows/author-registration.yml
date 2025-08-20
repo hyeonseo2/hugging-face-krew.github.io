@@ -128,8 +128,33 @@ jobs:
           elif [[ "$avatar_option" == *"직접 업로드"* ]]; then
             echo "📎 직접 업로드 옵션 선택됨"
             echo "🔄 이슈 첨부파일에서 이미지를 찾는 중..."
-            # TODO: 이슈 첨부파일 처리 로직 (향후 구현)
-            echo "avatar_path=assets/images/logo.png" >> $GITHUB_OUTPUT
+            
+            # 이슈 본문에서 첨부 이미지 URL 추출
+            issue_body='${{ github.event.issue.body }}'
+            
+            # GitHub user-attachments URL 패턴 매칭
+            image_url=$(echo "$issue_body" | grep -o 'https://github\.com/user-attachments/assets/[a-f0-9-]*\.[a-zA-Z]*' | head -1)
+            
+            if [ ! -z "$image_url" ]; then
+              echo "🎯 첨부 이미지 발견: $image_url"
+              
+              # 파일 확장자 추출
+              file_ext=$(echo "$image_url" | sed 's/.*\.//')
+              
+              # 이미지 다운로드
+              mkdir -p assets/images/author
+              
+              if curl -L "$image_url" -o "assets/images/author/$author_key.$file_ext"; then
+                echo "✅ 첨부 이미지 다운로드 완료"
+                echo "avatar_path=assets/images/author/$author_key.$file_ext" >> $GITHUB_OUTPUT
+              else
+                echo "❌ 첨부 이미지 다운로드 실패, 기본 이미지 사용"
+                echo "avatar_path=assets/images/logo.png" >> $GITHUB_OUTPUT
+              fi
+            else
+              echo "⚠️ 첨부 이미지를 찾을 수 없습니다. 기본 이미지 사용"
+              echo "avatar_path=assets/images/logo.png" >> $GITHUB_OUTPUT
+            fi
             
           else
             echo "🖼️ 기본 이미지 사용"
@@ -147,9 +172,6 @@ jobs:
           avatar_path='${{ steps.avatar.outputs.avatar_path }}'
           
           echo "📝 Updating _config.yml with new author..."
-          
-          # _config.yml 백업
-          cp _config.yml _config.yml.bak
           
           # 새 작성자 정보를 _config.yml에 추가
           {
@@ -234,7 +256,6 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: context.issue.number,
-                labels: ['processed', 'pending-review']
               });
             } else {
               await github.rest.issues.createComment({
