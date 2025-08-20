@@ -262,23 +262,29 @@ jobs:
           echo "🔍 삽입할 위치: line $insert_line"
           
           # 새 작성자 정보 생성 (올바른 들여쓰기로)
-          new_author_content="  $author_key:
-    name: $name
-    display_name: $display_name
-    avatar: '$avatar_path'
-    email: $email
-    web: $web
-    description: \"$description\""
+          # 임시 파일로 새 작성자 정보 생성
+          cat > new_author.tmp << EOF
+          $author_key:
+            name: $name
+            display_name: $display_name
+            avatar: '$avatar_path'
+            email: $email
+            web: $web
+            description: "$description"
+          EOF
           
           # 임시 파일 생성해서 지정된 위치에 삽입
           {
             head -n $((insert_line - 1)) _config.yml
-            echo "$new_author_content"
+            cat new_author.tmp
             tail -n +$insert_line _config.yml
           } > _config_temp.yml
           
           # 원본 파일 교체
           mv _config_temp.yml _config.yml
+          
+          # 임시 파일 정리
+          rm -f new_author.tmp
           
           echo "✅ _config.yml 업데이트 완료"
           echo "📍 새 작성자가 authors 섹션 내부에 추가되었습니다."
