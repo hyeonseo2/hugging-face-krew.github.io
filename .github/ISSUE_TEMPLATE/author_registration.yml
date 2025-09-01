@@ -19,8 +19,8 @@ body:
     id: author_key
     attributes:
       label: "작성자 ID (영문)"
-      description: "블로그에서 사용할 고유 ID를 영문으로 입력해주세요. (예: chaewon, minju)"
-      placeholder: "minju"
+      description: "블로그에서 사용할 고유 ID를 영문으로 입력해주세요. (예: gildong)"
+      placeholder: "gildong"
     validations:
       required: true
 
@@ -28,8 +28,8 @@ body:
     id: name
     attributes:
       label: "실명"
-      description: "실명을 영어로 입력해주세요. (예: Song Chaewon)"
-      placeholder: "Song Chaewon"
+      description: "실명을 영어로 입력해주세요. (예: Hong Gildong)"
+      placeholder: "Hong Gildong"
     validations:
       required: true
 
@@ -38,7 +38,7 @@ body:
     attributes:
       label: "표시 이름"
       description: "블로그에 표시될 이름을 입력해주세요."
-      placeholder: "Chaewon"
+      placeholder: "Huggy"
     validations:
       required: true
 
