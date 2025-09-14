@@ -14,36 +14,36 @@ _이 글은 Hugging Face 블로그의 [Implementing MCP Servers in Python: An AI
 ---
 
 
-# Implementing MCP Servers in Python: An AI Shopping Assistant with Gradio
+# Python으로 MCP 서버 구현하기: Gradio를 활용한 AI 쇼핑 어시스턴트
 
-Python Developers, want to give your LLM superpowers? Gradio is the fastest way to do it! With Gradio's Model Context Protocol (MCP) integration, your LLM can plug directly into the thousands of AI models and Spaces hosted on the Hugging Face [Hub](https://hf.co). By pairing the general reasoning capabilities of LLMs with the specialized abilities of models found on Hugging Face, your LLM can go beyond simply answering text questions to actually solving problems in your daily life.
+Python 개발자 여러분, LLM에 슈퍼파워를 부여하고 싶으신가요? Gradio가 가장 빠른 방법입니다! Gradio의 Model Context Protocol (MCP) 통합을 통해 여러분의 LLM은 Hugging Face [Hub](https://hf.co)에 호스팅된 수천 개의 AI 모델과 Space에 직접 연결될 수 있습니다. LLM의 일반적인 추론 능력과 Hugging Face에서 찾을 수 있는 모델들의 특화된 능력을 결합함으로써, 여러분의 LLM은 단순히 텍스트 질문에 답하는 것을 넘어 일상생활의 문제를 실제로 해결할 수 있습니다.
 
-For Python developers, Gradio makes implementing powerful MCP servers a breeze, offering features like:
-* **Automatic conversion of python functions into LLM tools:** Each API endpoint in your Gradio app is automatically converted into an MCP tool with a corresponding name, description, and input schema. The docstring of your function is used to generate the description of the tool and its parameters.
-* **Real-time progress notifications:** Gradio streams progress notifications to your MCP client, allowing you to monitor the status in real-time without having to implement this feature yourself.
-* **Automatic file uploads**, including support for public URLs and handling of various file types.
+Python 개발자들에게 Gradio는 강력한 MCP 서버를 구현하는 것을 매우 쉽게 만들어주며, 다음과 같은 기능들을 제공합니다:
+* **Python 함수를 LLM 도구로 자동 변환:** Gradio 앱의 각 API 엔드포인트는 해당하는 이름, 설명, 입력 스키마를 가진 MCP 도구로 자동 변환됩니다. 함수의 docstring은 도구와 매개변수의 설명을 생성하는 데 사용됩니다.
+* **실시간 진행 상황 알림:** Gradio는 MCP 클라이언트에 진행 상황 알림을 스트리밍하여, 이 기능을 직접 구현하지 않고도 실시간으로 상태를 모니터링할 수 있습니다.
+* **자동 파일 업로드**, 공개 URL 지원 및 다양한 파일 유형 처리 포함.
 
-Imagine this: you hate shopping because it takes too much time, and you dread trying on clothes yourself. What if an LLM could handle this for you? In this post, we'll create an LLM-powered AI assistant that can browse online clothing stores, find specific garments, and then use a virtual try-on model to show you how those clothes would look on you. See the demo below:
+이런 상황을 상상해보세요: 쇼핑이 너무 많은 시간이 걸려서 싫어하고, 직접 옷을 입어보는 것도 꺼려집니다. LLM이 이를 대신 처리해준다면 어떨까요? 이 포스트에서는 온라인 의류 매장을 탐색하고, 특정 의류를 찾고, 가상 피팅 모델을 사용하여 그 옷이 여러분에게 어떻게 보일지 보여줄 수 있는 LLM 기반 AI 어시스턴트를 만들어보겠습니다. 아래 데모를 확인해보세요:
 
 <video src="https://github.com/user-attachments/assets/e5bc58b9-ca97-418f-b78b-ce38d4bb527e" controls alt="AI Shopping Assistant Demo using Gradio python sdk and MCP"></video>
 
-## The Goal: Your Personal AI Stylist
+## 목표: 여러분의 개인 AI 스타일리스트
 
-To bring our AI shopping assistant to life, we'll combine three key components:
+AI 쇼핑 어시스턴트를 구현하기 위해 세 가지 핵심 구성 요소를 결합할 것입니다:
 
-1. [IDM-VTON](https://huggingface.co/yisol/IDM-VTON) Diffusion Model: This AI model is responsible for the virtual try-on functionality. It can edit existing photos to make it appear as if a person is wearing a different garment. We'll be using the Hugging Face Space for IDM-VTON, accessible [here](https://huggingface.co/spaces/yisol/IDM-VTON).
+1. [IDM-VTON](https://huggingface.co/yisol/IDM-VTON) Diffusion 모델: 이 AI 모델은 가상 피팅 기능을 담당합니다. 기존 사진을 편집하여 사람이 다른 옷을 입고 있는 것처럼 보이게 할 수 있습니다. 우리는 [여기](https://huggingface.co/spaces/yisol/IDM-VTON)에서 접근 가능한 IDM-VTON의 Hugging Face Space를 사용할 것입니다.
 
-2. Gradio: Gradio is an open-source Python library that makes it easy to build AI-powered web applications and, crucially for our project, to create MCP servers. Gradio will act as the bridge, allowing our LLM to call the IDM-VTON model and other tools.
+2. Gradio: Gradio는 AI 기반 웹 애플리케이션을 쉽게 구축할 수 있게 해주는 오픈소스 Python 라이브러리이며, 우리 프로젝트에서 중요한 것은 MCP 서버를 생성할 수 있다는 점입니다. Gradio는 LLM이 IDM-VTON 모델과 다른 도구들을 호출할 수 있도록 하는 브리지 역할을 합니다.
 
-3. Visual Studio Code's AI Chat Feature: We'll use VS Code's built-in AI chat, which supports adding arbitrary MCP servers, to interact with our AI shopping assistant. This will provide a user-friendly interface for issuing commands and viewing the virtual try-on results.
+3. Visual Studio Code의 AI Chat 기능: 임의의 MCP 서버를 추가할 수 있는 VS Code의 내장 AI 채팅을 사용하여 AI 쇼핑 어시스턴트와 상호작용할 것입니다. 이는 명령을 내리고 가상 피팅 결과를 보기 위한 사용자 친화적인 인터페이스를 제공합니다.
 
-## Building the Gradio MCP Server
-The core of our AI shopping assistant is the Gradio MCP server. This server will expose one main tool:
+## Gradio MCP 서버 구축하기
+AI 쇼핑 어시스턴트의 핵심은 Gradio MCP 서버입니다. 이 서버는 하나의 주요 도구를 노출합니다:
 
-1. `vton_generation`: This function will take a human model image and a garment image as input and use the IDM-VTON model to generate a new image of the person wearing the garment.
+1. `vton_generation`: 이 함수는 사람 모델 이미지와 의류 이미지를 입력으로 받아 IDM-VTON 모델을 사용하여 그 사람이 해당 의류를 입고 있는 새로운 이미지를 생성합니다.
 
 
-Here's the Python code for our Gradio MCP server:
+다음은 Gradio MCP 서버를 위한 Python 코드입니다:
 
 ```python
 from gradio_client import Client, handle_file
@@ -88,18 +88,18 @@ if __name__ == "__main__":
     vton_mcp.launch(mcp_server=True)
 ```
 
-By setting mcp_server=True in the `launch()` method, Gradio automatically converts our Python functions into MCP tools that LLMs can understand and use. The docstrings of our functions are used to generate descriptions of the tools and their parameters.
+`launch()` 메서드에서 mcp_server=True로 설정함으로써, Gradio는 자동으로 Python 함수를 LLM이 이해하고 사용할 수 있는 MCP 도구로 변환합니다. 함수의 docstring은 도구와 매개변수의 설명을 생성하는 데 사용됩니다.
 
 > [!TIP]
-> The original IDM-VTON space was implemented with Gradio 4.x which precedes the automatic MCP functionality. So in this demo, we'll be building a Gradio interface that queries the original space via the Gradio API client.
+> 원래 IDM-VTON space는 자동 MCP 기능이 있기 전인 Gradio 4.x로 구현되었습니다. 따라서 이 데모에서는 Gradio API 클라이언트를 통해 원래 space를 쿼리하는 Gradio 인터페이스를 구축할 것입니다.
 
-Finally, run this script with python.
+마지막으로, 이 스크립트를 python으로 실행합니다.
 
-## Configuring VS Code
+## VS Code 구성하기
 
-To connect our Gradio MCP server to VS Code's AI chat, we'll need to edit the `mcp.json` file. This configuration tells the AI chat where to find our MCP server and how to interact with it.
+Gradio MCP 서버를 VS Code의 AI 채팅에 연결하려면 `mcp.json` 파일을 편집해야 합니다. 이 구성은 AI 채팅에게 MCP 서버를 찾을 위치와 상호작용 방법을 알려줍니다.
 
-You can find this file by typing `MCP` in the command panel and selecting `MCP: Open User Configuration`. Once you open it, make sure the following servers are present:
+명령 패널에 `MCP`를 입력하고 `MCP: Open User Configuration`을 선택하여 이 파일을 찾을 수 있습니다. 파일을 열면 다음 서버들이 있는지 확인하세요:
 
 ```json
 {
@@ -118,17 +118,17 @@ You can find this file by typing `MCP` in the command panel and selecting `MCP: 
 }
 ```
 
-The playwright MCP server will let our AI assistant browse the web.
+playwright MCP 서버는 AI 어시스턴트가 웹을 탐색할 수 있게 해줍니다.
 
 > [!TIP]
-> Make sure the URL of the `vton` server matches the url printed to the console in the previous section. To run the playwright MCP server, you need to have node [installed](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
+> `vton` 서버의 URL이 이전 섹션에서 콘솔에 출력된 URL과 일치하는지 확인하세요. playwright MCP 서버를 실행하려면 node가 [설치](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)되어 있어야 합니다.
 
-## Putting It All Together
+## 모두 함께 사용하기
 
-Now we can start interacting with our AI shopping assistant. Open a new chat in VS Code, and you can ask the assistant something like "Browse the Uniqlo website for blue t-shirts, and show me what I would look like in three of them, using my photo at [your-image-url]."
+이제 AI 쇼핑 어시스턴트와 상호작용을 시작할 수 있습니다. VS Code에서 새 채팅을 열고, 어시스턴트에게 다음과 같이 요청할 수 있습니다: "유니클로 웹사이트에서 파란색 티셔츠를 찾아보고, [your-image-url]에 있는 내 사진을 사용해서 그 중 세 개를 내가 입었을 때 어떻게 보이는지 보여줘."
 
-See the above video for an example!
+예시는 위의 비디오를 참조하세요!
 
-## Conclusion
+## 결론
 
-The combination of Gradio, MCP, and powerful AI models like IDM-VTON opens up exciting possibilities for creating intelligent and helpful AI assistants. By following the steps outlined in this blog post, you can build your own assistant to solve the problems you care most about!
+Gradio, MCP, 그리고 IDM-VTON과 같은 강력한 AI 모델의 조합은 지능적이고 도움이 되는 AI 어시스턴트를 만들기 위한 흥미로운 가능성을 열어줍니다. 이 블로그 포스트에 설명된 단계를 따라가면, 여러분이 가장 관심 있는 문제를 해결하기 위한 자신만의 어시스턴트를 구축할 수 있습니다!
