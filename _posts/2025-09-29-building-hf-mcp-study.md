@@ -180,6 +180,7 @@ image: assets/images/blog/posts/2025-09-29-building-hf-mcp/thumbnail.png
 
 ## 시연
 ### 로컬
+1. HuggingFace MCP 서버 기동
 ```
 $ docker build --no-cache -t hf-mcp-server:latest .
 $ docker run --rm -p 3000:3000 hf-mcp-server:latest
@@ -201,10 +202,12 @@ Using streamableHttpJson transport type (JSON response mode enabled)
 
 ![hf-mcp-dashborad](../assets/images/blog/posts/2025-09-29-building-hf-mcp/hf-mcp-dashborad.png)
 
+2. HuggingFace MCP 명령어 테스트
 ```
 $ npx mcp-remote http://localhost:3000/mcp --interactive
 ```
 
+- 도구 목록 호출
 ```
 $ npx mcp-remote http://localhost:3000/mcp --interactive
 [34228] Using automatically selected callback port: 4208
@@ -220,6 +223,7 @@ $ npx mcp-remote http://localhost:3000/mcp --interactive
 {"jsonrpc":"2.0","id":1,"result":{"tools":[{"name":"hf_whoami","description":"Hugging Face tools are being used anonymously and may be rate limited. Call this tool for instructions on joining and authenticating.","inputSchema":{"type":"object","properties":{},"additionalProperties":false,"$schema":"http://json-schema.org/draft-07/schema#"},"annotations":{"title":"Hugging Face User Info"}} ...
 ```
 
+- 이미지 생성 모델 호출
 ```
 {  "jsonrpc": "2.0",  "id": 2,  "method": "tools/call",  "params": {    "name": "gr1_flux1_schnell_infer",    "arguments": {      "prompt": "고양이가 책상 위에 앉아있는  일러스트"    }  }}
 [34228] [Local→Remote] tools/call
@@ -231,7 +235,7 @@ $ npx mcp-remote http://localhost:3000/mcp --interactive
 
 
 ### Claude Desktop
-
+1. Claude Desktop 내 MCP 서버 설정 추가
 claude_desktop_config.json
 ```
     "huggingface": {
@@ -246,8 +250,14 @@ claude_desktop_config.json
     }
 ```
 
+2. HuggingFace MCP 테스트
+- 도구 목록 호출
 ![hf-mcp-claude-test1](../assets/images/blog/posts/2025-09-29-building-hf-mcp/hf-mcp-claude-test1.png)
+
+- 데이터셋, 모델, 스페이스 검색
 ![hf-mcp-claude-test2](../assets/images/blog/posts/2025-09-29-building-hf-mcp/hf-mcp-claude-test2.png)
+
+- 이미지 생성 모델 호출
 ![hf-mcp-claude-test3](../assets/images/blog/posts/2025-09-29-building-hf-mcp/hf-mcp-claude-test3.png)
 
 
