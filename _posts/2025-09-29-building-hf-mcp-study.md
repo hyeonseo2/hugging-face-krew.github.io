@@ -251,13 +251,17 @@ claude_desktop_config.json
 ```
 
 2. HuggingFace MCP 테스트
+
 - 도구 목록 호출
+
 ![hf-mcp-claude-test1](../assets/images/blog/posts/2025-09-29-building-hf-mcp/hf-mcp-claude-test1.png)
 
 - 데이터셋, 모델, 스페이스 검색
+
 ![hf-mcp-claude-test2](../assets/images/blog/posts/2025-09-29-building-hf-mcp/hf-mcp-claude-test2.png)
 
 - 이미지 생성 모델 호출
+
 ![hf-mcp-claude-test3](../assets/images/blog/posts/2025-09-29-building-hf-mcp/hf-mcp-claude-test3.png)
 
 
