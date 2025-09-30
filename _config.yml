@@ -63,6 +63,13 @@ authors:
     email: ahnjj.dev@gmail.com 
     web: https://github.com/ahnjj/
     description: "Hello, I'm jeong!🤗"
+  hyojung:
+    name: Lee Hyojung
+    display_name: hyojung
+    avatar: 'assets/images/author/hyojung.png'
+    email: eehyyo@gmail.com
+    web: https://github.com/eehyo
+    description: "Hello, I’m Hyojung Lee! 🤗"
 
 
 # Social
