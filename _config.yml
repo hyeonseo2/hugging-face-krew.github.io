@@ -63,6 +63,13 @@ authors:
     email: ahnjj.dev@gmail.com 
     web: https://github.com/ahnjj/
     description: "Hello, I'm jeong!🤗"
+  hyeonseo:
+    name: Yun Hyeonseo
+    display_name: hyeonseo
+    avatar: 'assets/images/author/hyeonseo.png'
+    email: 0525yhs@gmail.com
+    web: https://github.com/hyeonseo2
+    description: "Hello, I’m Hyeonseo! 🤗"
 
 
 # Social
