@@ -70,6 +70,13 @@ authors:
     email: eehyyo@gmail.com
     web: https://github.com/eehyo
     description: "Hello, I’m Hyojung Lee! 🤗"
+  hyeonseo:
+    name: Yun Hyeonseo
+    display_name: hyeonseo
+    avatar: 'assets/images/author/hyeonseo.png'
+    email: 0525yhs@gmail.com
+    web: https://github.com/hyeonseo2
+    description: "Hello, I’m Hyeonseo! 🤗"
 
 
 # Social
