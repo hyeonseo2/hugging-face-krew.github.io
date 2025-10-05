@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Hugging Face MCP 서버 구축하기"
+title: "Hugging Face MCP 서버 구축기"
 author: hyeonseo
 categories: [MCP]
 image: assets/images/blog/posts/2025-09-29-building-hf-mcp/thumbnail.png
@@ -12,7 +12,7 @@ _이 글은 Hugging Face 블로그의 [Building the Hugging Face MCP Server](htt
 
 ---
 
-# Hugging Face MCP 서버 구축하기
+# Hugging Face MCP 서버 구축기
 
 > [!TIP]
 > **요약:** Hugging Face 공식 MCP 서버는 Hub에 접근하는 AI 어시스턴트를 위한 독특한 커스터마이즈 옵션을 제공하며, 하나의 간단한 URL로 수천 개의 AI 애플리케이션을 이용할 수 있습니다. 배포를 위해 MCP의 "Streamable HTTP" 전송 방식을 사용했으며, 서버 개발자가 직면하는 여러 고려사항(trade-offs)을 자세히 살펴봅니다. 
@@ -34,7 +34,7 @@ Hugging Face에서는 MCP를 통해 Hub에 접근할 수 있도록 하는 것이
   <figcaption><a href="https://huggingface.co/settings/mcp">Hugging Face MCP 설정 페이지</a> 사용자가 도구를 구성할 수 있는 곳입니다.</figcaption>
 </figure>
 
-복잡한 다운로드나 설정을 피함으로써 접근을 간편하게 만들고자 했기에, 간단한 URL을 통해 원격으로 접근할 수 있도록 하는 것이 필수적이었습니다.
+복잡한 다운로드나 설정 없이 접근을 간편하게 만들고자 했기에, 간단한 URL만으로 원격 접근이 가능해야 했습니다.
 
 ## 원격 서버
 
@@ -98,7 +98,7 @@ MCP 서버 개발자는 Streamable HTTP 전송을 설정할 때 많은 선택지
 
 <figure class="image text-center">
   <img src="https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/hf-mcp-remote/hf-mcp-connections.png" alt="The Hugging Face MCP Server Connection Dashboard">
-  <figcaption>The Hugging Face MCP 서버 연결 대시보드.</figcaption>
+  <figcaption>Hugging Face MCP 서버 연결 대시보드.</figcaption>
 </figure>
 
 
