@@ -182,7 +182,7 @@ image: assets/images/blog/posts/2025-09-29-building-hf-mcp/thumbnail.png
 ## 시연
 ### 로컬
 1. HuggingFace MCP 서버 기동
-```s
+```
 $ docker build --no-cache -t hf-mcp-server:latest .
 $ docker run --rm -p 3000:3000 hf-mcp-server:latest
 Starting MCP server with transport type: streamablehttpjson on port 3000
