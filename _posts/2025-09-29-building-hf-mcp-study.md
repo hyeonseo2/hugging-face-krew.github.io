@@ -3,7 +3,7 @@ layout: post
 title: "Hugging Face MCP 서버 스터디"
 author: hyeonseo
 categories: [스터디]
-image: assets/images/blog/posts/2025-09-29-building-hf-mcp/thumbnail.png
+image: assets/images/blog/posts/2025-09-29-building-hf-mcp/thumbnail-study.png
 ---
 * TOC
 {:toc}
