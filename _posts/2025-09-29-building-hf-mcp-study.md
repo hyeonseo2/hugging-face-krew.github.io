@@ -3,7 +3,7 @@ layout: post
 title: "Hugging Face MCP 서버 스터디"
 author: hyeonseo
 categories: [스터디]
-image: assets/images/blog/posts/2025-09-29-building-hf-mcp/thumbnail.png
+image: assets/images/blog/posts/2025-09-29-building-hf-mcp/thumbnail-study.png
 ---
 * TOC
 {:toc}
@@ -11,9 +11,11 @@ image: assets/images/blog/posts/2025-09-29-building-hf-mcp/thumbnail.png
 이 글은 Hugging Face 블로그의 [Building the Hugging Face MCP Server](https://huggingface.co/blog/building-hf-mcp)를 읽고 공부한 내용을 바탕으로 정리했습니다. 
 
 ---
+
 ## 주요 개념
+
 | 원문 용어 (English)            | 번역 용어 (Korean)               |
-| ---------------------------- | ---------------------------- |
+| --- | --- |
 | Model Context Protocol (MCP) | 모델 컨텍스트 프로토콜(MCP)            |
 | STDIO                        | STDIO                        |
 | HTTP with SSE                | HTTP with SSE                     |
@@ -183,10 +185,6 @@ image: assets/images/blog/posts/2025-09-29-building-hf-mcp/thumbnail.png
 ```
 $ docker build --no-cache -t hf-mcp-server:latest .
 $ docker run --rm -p 3000:3000 hf-mcp-server:latest
-```
-
-```
-$ docker run --rm -p 3000:3000 hf-mcp-server:lf
 Starting MCP server with transport type: streamablehttpjson on port 3000
 Using standard HF_TOKEN authentication.
 Using streamableHttpJson transport type (JSON response mode enabled)
