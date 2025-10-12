@@ -77,6 +77,13 @@ authors:
     email: 0525yhs@gmail.com
     web: https://github.com/hyeonseo2
     description: "Hello, I’m Hyeonseo! 🤗"
+  woojun:
+    name: Woojun Jung
+    display_name: 정우준
+    avatar: 'assets/images/author/woojun.png'
+    email: jungnerd@gmail.com
+    web: https://github.com/jungnerd
+    description: "🤗"
 
 
 # Social
