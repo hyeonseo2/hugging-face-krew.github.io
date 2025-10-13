@@ -20,7 +20,7 @@ _이 글은 Hugging Face 블로그의 [MCP for Research: How to Connect AI to Re
 
 [Model Context Protocol (MCP)](https://huggingface.co/learn/mcp-course/unit0/introduction)은 에이전틱(Agentic) 모델이 외부 도구 및 데이터 소스와 상호작용할 수 있도록 하는 표준 프로토콜입니다. 연구 탐색에서 MCP는 AI가 자연어 요청을 통해 연구 도구를 활용할 수 있게 함으로써, 플랫폼 간 전환과 상호 참조(cross-referencing) 과정을 자동으로 처리할 수 있도록 합니다.
 
-![Research Tracker MCP in action](./assets/images/blog/posts/2025-10-06-mcp-for-research/demo.gif)
+![Research Tracker MCP in action](../assets/images/blog/posts/2025-10-06-mcp-for-research/demo.gif)
 
 ## 연구 탐색: 세 가지 추상화 계층
 
