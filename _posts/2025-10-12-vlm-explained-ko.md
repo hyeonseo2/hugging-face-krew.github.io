@@ -75,10 +75,6 @@ Hugging Face Hub에는 많은 오픈소스 비전 언어 모델이 있습니다.
 accelerate launch --num_processes=8 -m lmms_eval --model llava --model_args pretrained="liuhaotian/llava-v1.5-7b" --tasks mme,mmbench_en --batch_size 1 --log_samples --log_samples_suffix llava_v1.5_mme_mmbenchen --output_path ./logs/ 
 ```
 
-Both the Vision Arena and the Open VLM Leaderbard are limited to the models that are submitted to them, and require updates to add new models. If you want to find additional models, you can browse the Hub for [models](https://huggingface.co/models?pipeline_tag=image-text-to-text&sort=trending) under the task `image-text-to-text`. 
-
-There are different benchmarks to evaluate vision language models that you may come across in the leaderboards. We will go through a few of them.
-
 Vision Arena와 Open VLM 리더보드는 제출된 모델만 확인할 수 있으며, 새로운 모델을 추가하려면 업데이트가 필요합니다. 추가 모델을 찾고 싶다면, Hub에서 `image-text-to-text` 태스크로 [모델](https://huggingface.co/models?pipeline_tag=image-text-to-text&sort=trending)을 탐색할 수 있습니다.
 
 리더보드에는 비전 언어 모델을 평가하기 위한 다양한 벤치마크가 있습니다. 그 중 몇 가지를 살펴보겠습니다.
@@ -88,9 +84,6 @@ Vision Arena와 Open VLM 리더보드는 제출된 모델만 확인할 수 있�
 [MMMU(A Massive Multi-discipline Multimodal Understanding and Reasoning Benchmark for Expert AGI)](https://huggingface.co/datasets/MMMU/MMMU)는 비전 언어 모델을 평가하기 위한 가장 종합적인 벤치마크입니다. 예술, 공학 등 다양한 분야에서 대학 수준의 지식과 추론 능력을 요구하는 11,500개의 멀티모달 문제가 포함되어 있습니다.
 
 ### MMBench
-
-[MMBench](https://huggingface.co/datasets/lmms-lab/MMBench) is an evaluation benchmark that consists of 3000 single-choice questions over 20 different skills, including OCR, object localization and more.  The paper also introduces an evaluation strategy called CircularEval, where the answer choices of a question are shuffled in different combinations, and the model is expected to give the right answer at every turn. 
-There are other more specific benchmarks across different domains, including MathVista (visual mathematical reasoning), AI2D (diagram understanding), ScienceQA (Science Question Answering) and OCRBench (document understanding).
 
 [MMBench](https://huggingface.co/datasets/lmms-lab/MMBench)는 OCR, 객체 위치 추정 등 20가지 다양한 능력을 평가하기 위한 3,000개의 객관식 문제로 구성된 평가 벤치마크입니다. 해당 논문에서는 CircularEval이라는 평가 전략도 함께 제안하는데, 이는 질문의 선택지를 여러 조합으로 섞은 뒤, 모델이 매번 올바른 답을 일관되게 선택할 수 있는지를 평가하는 방식입니다. 이외에도 다양한 도메인별로 특화된 벤치마크들이 존재합니다. 예를 들어, MathVista(시각적 수학 추론), AI2D(도표 이해), ScienceQA(과학 질의 응답), OCRBench(문서 이해) 등이 있습니다.
 
@@ -259,4 +252,4 @@ trainer.push_to_hub()
 
 **Acknowledgements**
 
-We would like to thank Pedro Cuenca, Lewis Tunstall, Kashif Rasul and Omar Sanseviero for their reviews and suggestions on this blog post.
+이 블로그 게시물에 대한 리뷰와 제안을 해주신 Pedro Cuenca, Lewis Tunstall, Kashif Rasul, 그리고 Omar Sanseviero께 감사드립니다.
