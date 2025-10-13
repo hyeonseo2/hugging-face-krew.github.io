@@ -14,7 +14,7 @@ _이 글은 Hugging Face 블로그의 [MCP for Research: How to Connect AI to Re
 ---
 
 
-# MCP for Research: AI와 연구 도구(Research Tools) 연결하기
+# 연구를 위한 MCP (MCP for Research): AI와 연구 도구(Research Tools) 연결하기
 
 학술 연구에서는 논문, 코드, 관련 모델과 데이터셋을 찾는 **연구 탐색(research discovery)**이 빈번하게 일어납니다. 보통 연구자는 [arXiv](https://arxiv.org/), [GitHub](https://github.com/), and [Hugging Face](https://huggingface.co/)와 같은 여러 플랫폼을 오가며 관련 정보를 직접 찾아 연결해야 합니다.
 
