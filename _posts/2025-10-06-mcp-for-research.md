@@ -16,7 +16,7 @@ _이 글은 Hugging Face 블로그의 [MCP for Research: How to Connect AI to Re
 
 # 연구를 위한 MCP (MCP for Research): AI와 연구 도구(Research Tools) 연결하기
 
-학술 연구에서는 논문, 코드, 관련 모델과 데이터셋을 찾는 **연구 탐색(research discovery)**이 빈번하게 일어납니다. 보통 연구자는 [arXiv](https://arxiv.org/), [GitHub](https://github.com/), and [Hugging Face](https://huggingface.co/)와 같은 여러 플랫폼을 오가며 관련 정보를 직접 찾아 연결해야 합니다.
+학술 연구에서는 논문, 코드, 관련 모델과 데이터셋을 찾는 **연구 탐색(research discovery)**이 빈번하게 일어납니다. 보통 연구자는 [arXiv](https://arxiv.org/), [GitHub](https://github.com/), [Hugging Face](https://huggingface.co/)와 같은 여러 플랫폼을 오가며 관련 정보를 직접 찾아 연결해야 합니다.
 
 [Model Context Protocol (MCP)](https://huggingface.co/learn/mcp-course/unit0/introduction)은 에이전틱(Agentic) 모델이 외부 도구 및 데이터 소스와 상호작용할 수 있도록 하는 표준 프로토콜입니다. 연구 탐색에서 MCP는 AI가 자연어 요청을 통해 연구 도구를 활용할 수 있게 함으로써, 플랫폼 간 전환과 상호 참조(cross-referencing) 과정을 자동으로 처리할 수 있도록 합니다.
 
