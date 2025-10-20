@@ -103,7 +103,7 @@ print(f"Average temperature: {temperature_sum / 3:.1f}°C")
 
 <ins>[**smolagents의 CodeAgent 구현**](https://github.com/huggingface/smolagents/blob/6a12ebdf210207eec22d5940157f522463fc1c59/src/smolagents/agents.py#L1344)</ins>은 LLM 출력에서 Python 코드를 추출하는데, 다음과 같은 상황에서 실패할 수 있습니다:
 
-* 마크다운의 코드 블록이 불완전하거나 잘못 포맷된 경우
+* 마크다운 코드 블록이 불완전하거나 잘못된 형식으로 작성된 경우
 * 하나의 응답에 여러 코드 블록이 포함된 경우
 
 구조화된 생성은 안정적인 JSON 파싱으로 이러한 문제를 제거합니다.
