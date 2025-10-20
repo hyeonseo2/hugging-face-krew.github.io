@@ -1,15 +1,10 @@
-
-
-
-
 ---
 layout: post
-title: "CodeAgents + Structure: A Better Way to Execute Actions"
+title: "CodeAgents + Structure: 액션 실행을 위한 더 좋은 방법"
 author: jimin
 categories: [Agent]
 image: assets/images/blog/posts/2025-10-13-structured-codeagent/thumbnail.png
 ---
-
 * TOC
 {:toc}
 <!--toc-->
@@ -17,6 +12,8 @@ image: assets/images/blog/posts/2025-10-13-structured-codeagent/thumbnail.png
 _이 글은 Hugging Face 블로그의 [CodeAgents + Structure: A Better Way to Execute Actions](https://huggingface.co/blog/structured-codeagent)를 한국어로 번역한 글입니다._
 
 ---
+
+
 # CodeAgents + Structure: 액션 실행을 위한 더 좋은 방법
 
 오늘 우리는 AI 에이전트 설계에서 두 가지 강력한 패러다임을 연결하는 연구를 소개합니다. 하나는 코드 기반 액션의 표현력이고, 다른 하나는 구조화된 생성의 신뢰성입니다. 연구 결과, **CodeAgents**에게 사고(thoughts)와 코드를 모두 구조화된 JSON 형식으로 생성하도록 하면, 여러 벤치마크에서 기존 방식보다 성능이 크게 향상됨을 확인할 수 있습니다.
