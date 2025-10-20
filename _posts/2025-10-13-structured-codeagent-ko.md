@@ -56,7 +56,7 @@ print(f"Average temperature: {temperature_sum / 3:.1f}°C")
 
 이러한 변화는 처음에 <ins>[“**Executable Code Actions Elicit Better LLM Agents**”](https://arxiv.org/abs/2402.01030)</ins> 논문에서 CodeAct라는 이름으로 제안되었으며, 기존의 단순 도구 호출 방식에 더해 임의의 실행 가능한 Python 코드를 작성할 수 있는 유연성을 AI 에이전트에 부여했습니다.
 
-여기서 핵심 통찰은, **도구 호출이 코드 내부에서 직접 이루어진다는 점**입니다. 이를 통해 변수와 상태를 생성하는 것을 안정적으로 관리할 수 있게 됩니다. 에이전트는 루프, 함수, 조건문 안에서 도구를 호출할 수 있으며, 이는 본질적으로 각 액션마다 동적으로 변화하는 도구 실행 그래프를 생성할 수 있습니다!
+여기서 핵심 아이디어는, **도구 호출이 코드 내부에서 직접 이루어진다는 점**입니다. 이를 통해 변수와 상태 관리가 훨씬 더 안정적이고 신뢰할 수 있게 됩니다. 에이전트는 루프, 함수, 조건문 안에서 도구를 호출할 수 있으며, 이는 본질적으로 각 액션마다 동적으로 변화하는 도구 실행 그래프를 생성할 수 있습니다!
 
 <ins>[**CodeAgent**](https://github.com/huggingface/smolagents/blob/6a12ebdf210207eec22d5940157f522463fc1c59/src/smolagents/agents.py#L1344)</ins> 사용의 장점:
 
