@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "CodeAgents + Structure: 액션 실행을 위한 더 좋은 방법"
-author: jimin
+author: Jimin
 categories: [Agent]
 image: assets/images/blog/posts/2025-10-13-structured-codeagent/thumbnail.png
 ---
