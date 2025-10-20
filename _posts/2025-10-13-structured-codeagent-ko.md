@@ -28,7 +28,7 @@ _이 글은 Hugging Face 블로그의 [CodeAgents + Structure: A Better Way to E
 
 AI 에이전트는 API 호출, 데이터 처리, 복잡한 문제 해결과 같은 실제 세계 액션을 취할 수 있어야 합니다. 에이전트가 이러한 액션을 표현하는 방식은 여러 패러다임을 거쳐 발전했습니다.
 
-### **전통적인 JSON Agent (ToolCallingAgent)**: 구조화된 JSON을 생성해 도구를 호출하는 에이전트
+### **기존의 JSON Agent (ToolCallingAgent)**: 구조화된 JSON을 생성해 도구를 호출하는 에이전트
 
 ```json
 {"tool": "get_weather", "arguments": {"city": "Paris"}}
