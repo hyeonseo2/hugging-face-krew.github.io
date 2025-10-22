@@ -84,6 +84,13 @@ authors:
     email: jungnerd@gmail.com
     web: https://github.com/jungnerd
     description: "🤗"
+  youngjun:
+    name: Cho Youngjun
+    display_name: Youngjun
+    avatar: 'assets/images/author/youngjun.png'
+    email: whdudwns7777@gmail.com
+    web: https://github.com/choincnp
+    description: "안녕하세요! genAI 및 Agent에 관심있는 조영준입니다!"
 
 
 # Social
