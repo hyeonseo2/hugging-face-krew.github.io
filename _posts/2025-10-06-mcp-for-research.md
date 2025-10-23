@@ -8,7 +8,6 @@ image: assets/images/blog/posts/2025-10-06-mcp-for-research/thumbnail.png
 * TOC
 {:toc}
 <!--toc-->
-
 _이 글은 Hugging Face 블로그의 [MCP for Research: How to Connect AI to Research Tools](https://huggingface.co/blog/mcp-for-research)를 한국어로 번역한 글입니다._
 
 ---
