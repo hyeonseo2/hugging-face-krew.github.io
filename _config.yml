@@ -77,6 +77,13 @@ authors:
     email: 0525yhs@gmail.com
     web: https://github.com/hyeonseo2
     description: "Hello, I’m Hyeonseo! 🤗"
+  Jimin:
+    name: An Jimin
+    display_name: Jimin
+    avatar: 'assets/images/author/Jimin.png'
+    email: jimin.an.1120@gmail.com
+    web: https://github.com/jiminAn
+    description: "Hello, I’m Jimin! I’m a NLP researcher in 🇰🇷"
   woojun:
     name: Woojun Jung
     display_name: 정우준
