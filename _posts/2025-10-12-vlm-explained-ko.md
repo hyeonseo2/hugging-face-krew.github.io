@@ -152,7 +152,7 @@ print(processor.decode(output[0], skip_special_tokens=True))
 [TRL](https://github.com/huggingface/trl)의 `SFTTrainer`가 이제 비전 언어 모델을 실험적으로 지원하기 시작했습니다! 여기서는 [llava-instruct](https://huggingface.co/datasets/HuggingFaceH4/llava-instruct-mix-vsft) 데이터셋을 사용해 [Llava 1.5 VLM](https://huggingface.co/llava-hf/llava-1.5-7b-hf) 모델에 대해 SFT를 수행하는 예시를 제공합니다. 이 데이터셋은 26만개의 이미지-대화 쌍으로 구성되어 있습니다.
 데이터셋은 사용자와 어시스턴트 간의 상호작용을 메시지 시퀀스 형태로 구성하고 있습니다. 예를 들어, 각 대화는 사용자가 특정 이미지에 대해 질문하는 형식으로 해당 이미지와 짝지어져 있습니다.
 
-VLM에 대한 실험적 지원을 사용해보기 위해서, `pip install -U trl`로 TRL의 최신 버전을 설치해야 합니다.
+이 실험적인 지원을 VLM 학습에 적용해보기 위해서는 `pip install -U trl`로 TRL의 최신 버전을 설치해야 합니다.
 전체 예시 스크립트는 [여기](https://github.com/huggingface/trl/blob/main/examples/scripts/vsft_llava.py)서 확인할 수 있습니다.
 
 ```python
