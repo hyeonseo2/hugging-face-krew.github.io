@@ -19,9 +19,9 @@ _이 글은 Hugging Face 블로그의 [Vision Language Models Explained](https:/
 
 비전 언어 모델은 이미지와 텍스트로부터 동시에 학습하여 시각적 질의응답(VQA)부터 이미지 캡셔닝까지 다양한 작업을 수행할 수 있는 모델입니다. 이 포스트에서는 비전 언어 모델의 주요 구성 요소들을 살펴보고, 전체적인 개요를 파악하며, 작동 원리를 이해하고, 적합한 모델을 찾는 방법, 추론에 사용하는 방법, 그리고 [trl](https://github.com/huggingface/trl)의 새 버전을 사용해 쉽게 파인튜닝하는 방법을 다룹니다!
 
-## 비전 언어 모델이란?
+## 비전 언어 모델(Vision Language Model)이란?
 
-비전 언어 모델은 이미지와 텍스트로부터 학습할 수 있는 멀티모달 모델로 광범위하게 정의할 수 있고, 이미지와 텍스트 입력을 받아 텍스트 출력을 생성하는 생성 모델의 한 유형입니다. 거대 비전 언어 모델은 우수한 제로샷 능력을 가지고 있으며, 일반화를 잘 수행하고, 문서, 웹 페이지 등을 포함한 다양한 유형의 이미지에 대해서도 사용할 수 있습니다. 사용 사례로는 이미지에 대한 대화, 지시를 통한 이미지 인식, 시각적 질의응답, 문서 이해, 이미지 캡셔닝 등이 있습니다. 일부 비전 언어 모델은 이미지의 공간적 속성도 포착할 수 있습니다. 이러한 모델들은 특정 대상을 탐지하거나 분할하라는 프롬프트에 따라 바운딩 박스나 세그멘테이션 마스크를 출력하거나, 다양한 개체의 위치를 파악하거나 이들의 상대적 또는 절대적 위치에 대한 질문에 답할 수 있습니다. 기존의 거대 비전 언어 모델 세트, 이들이 학습된 데이터, 이미지를 인코딩하는 방식, 그리고 그에 따른 능력은 정말 다양합니다.
+비전 언어 모델은 이미지와 텍스트로부터 학습할 수 있는 멀티모달(Multimodal) 모델로 폭넓게 정의됩니다. 이들은 이미지와 텍스트를 입력으로 받아 텍스트를 생성하는 생성형(generative) 모델의 일종입니다. 거대 비전 언어 모델은 우수한 제로샷(zero-shot) 능력을 가지고 있으며, 일반화 성능이 뛰어나고, 문서나 웹 페이지 등 다양한 유형의 이미지에 대해서도 사용할 수 있습니다. 활용 사례로는 이미지에 대해 대화하기, 명령 기반 이미지 인식, 시각적 질의응답(VQA), 문서 이해, 이미지 캡셔닝 등이 있습니다. 일부 비전 언어 모델은 이미지의 공간적 특성 또한 포착할 수 있습니다. 이러한 모델들은 특정 대상을 탐지하거나 분할하라는 프롬프트에 따라 바운딩 박스(bounding box) 또는 세그멘테이션 마스크(segmentation mask)를 출력할 수 있으며, 서로 다른 객체의 상대적 또는 절대적 위치를 파악하거나 그에 대한 질문에 답변할 수도 있습니다. 현재 존재하는 거대 비전 언어 모델들은 학습에 사용된 데이터, 이미지 인코딩 방식, 그리고 그로 인한 모델의 능력 측면에서 매우 다양합니다.
 
 <p align="center">
  <img src="https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/blog/vlm/visual.jpg" alt="VLM Capabilities" style="width: 90%; height: auto;"><br>
@@ -35,7 +35,7 @@ Hugging Face Hub에는 많은 오픈소스 비전 언어 모델이 있습니다.
 - 이러한 모델들 중 일부는 모델 환각(hallucination)을 줄이는 "그라운딩(grounding)" 기능을 가지고 있습니다.
 - 별도로 명시되지 않는 한, 모든 모델은 영어로 학습되었습니다.
 
-| 모델                  | 허용 라이센스 | 모델 크기 | 이미지 해상도 | 추가적인 기능               |
+| 모델                  | 허용 라이선스 | 모델 크기 | 이미지 해상도 | 추가적인 기능               |
 |------------------------|--------------------|------------|------------------|---------------------------------------|
 | [LLaVA 1.6 (Hermes 34B)](https://huggingface.co/llava-hf/llava-v1.6-34b-hf) | ✅                  | 34B        | 672x672          |                                       |
 | [deepseek-vl-7b-base](https://huggingface.co/deepseek-ai/deepseek-vl-7b-base)    | ✅                  | 7B         | 384x384          |                                       |
@@ -50,18 +50,18 @@ Hugging Face Hub에는 많은 오픈소스 비전 언어 모델이 있습니다.
 | [Yi-VL-34B](https://huggingface.co/01-ai/Yi-VL-34B)              | ✅                  | 34B        | 448x448          |  2개 국어 (영어, 중국어) |
 
 
-## 내게 적합한 비전 언어 모델 찾기
+## 적합한 비전 언어 모델 찾기
 
 자신의 사용 사례에 가장 적합한 모델을 선택하는 방법은 여러 가지가 있습니다.
 
-[Vision Arena](https://huggingface.co/spaces/WildVision/vision-arena)는 모델 출력에 대한 익명 투표만을 기반으로 하는 리더보드로, 지속적으로 업데이트됩니다. 이 아레나에서 사용자는 이미지와 프롬프트를 입력하면, 두 개의 서로 다른 모델의 출력이 익명으로 샘플링되고, 사용자는 선호하는 출력을 선택할 수 있습니다. 이러한 방식으로 리더보드는 전적으로 인간의 선호도에 기반하여 구성됩니다.
+[Vision Arena](https://huggingface.co/spaces/WildVision/vision-arena)는 모델 출력에 대한 익명 투표만을 기반으로 하는 리더보드로, 지속적으로 업데이트됩니다. 이 아레나에서 사용자는 이미지와 프롬프트를 입력하면, 두 개의 서로 다른 모델의 출력이 무작위로 익명 제공되며, 사용자는 선호하는 출력을 선택할 수 있습니다. 이러한 과정을 통해 리더보드는 전적으로 인간의 선호도에 기반하여 구성됩니다.
 
 <p align="center">
  <img src="https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/blog/vlm/arena.png" alt="Vision Arena" style="width: 90%; height: auto;"><be>
 <em>Vision Arena</em>
 </p>
 
-[Open VLM 리더보드](https://huggingface.co/spaces/opencompass/open_vlm_leaderboard)는 비전 언어 모델들이 다양한 메트릭과 평균 점수에 따라 순위가 매겨지는 또 다른 리더보드입니다. 모델 크기, 오픈소스 여부에 따라 모델을 필터링하고, 다양한 메트릭에 대한 순위를 확인할 수도 있습니다.
+[Open VLM 리더보드](https://huggingface.co/spaces/opencompass/open_vlm_leaderboard)는 비전 언어 모델들이 다양한 평가 지표와 평균 점수에 따라 순위가 매겨지는 또 다른 리더보드입니다. 모델 크기, 오픈소스 여부에 따라 모델을 필터링하고, 다양한 평가 지표에 대한 순위를 확인할 수도 있습니다.
 
 <p align="center">
  <img src="https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/blog/vlm/leaderboard.png" alt="VLM Capabilities" style="width: 90%; height: auto;"><be>
@@ -89,9 +89,9 @@ Vision Arena와 Open VLM 리더보드는 제출된 모델만 확인할 수 있�
 
 ## 기술적 세부사항
  
-비전 언어 모델을 사전학습하는 방법은 여러 가지가 있습니다. 핵심 아이디어는 이미지와 텍스트 표현을 통합하고, 이를 텍스트 디코더에 입력해 생성 작업을 하도록 하는 것입니다. 일반적인 모델들은 보통 이미지 인코더, 이미지와 텍스트 표현을 정렬하기 위한 임베딩 프로젝터(보통은 밀집 신경망), 그리고 텍스트 디코더가 차례로 구성되어 있습니다. 모델마다 학습 방식에는 각자 차이가 있습니다.
+비전 언어 모델을 사전학습하는 방법은 여러 가지가 있습니다. 핵심 아이디어는 이미지와 텍스트 표현을 통합하고, 이를 텍스트 디코더에 입력해 생성 작업을 하도록 하는 것입니다. 가장 일반적이고 대표적인 모델들은 이미지 인코더(image encoder), 이미지와 텍스트 표현을 정렬하기 위한 임베딩 프로젝터(embedding projector, 보통 밀집 신경망), 그리고 텍스트 디코더(text decoder)로 구성되며, 이 순서로 쌓여 있습니다. 학습 방식은 모델마다 조금씩 다르게 설계됩니다.
 
-예를 들어, LLaVA는 CLIP 이미지 인코더, 멀티모달 프로젝터, 그리고 Vicuna 텍스트 디코더로 구성됩니다. LLaVA의 저자들은 이미지와 캡션으로 구성된 데이터셋을 GPT-4에 입력하여, 캡션과 이미지에 관련된 질문을 자동으로 생성했습니다. 그 후, 이미지 인코더와 텍스트 디코더는 고정(freeze)하고, 멀티모달 프로젝터만 학습시켰습니다. 이때 모델에 이미지와 GPT-4가 생성한 질문을 입력하고, 모델의 출력이 정답 캡션과 일치하도록 학습시켰습니다. 프로젝터의 사전학습이 끝난 뒤에는 이미지 인코더를 계속 고정한 채, 텍스트 디코더와 프로젝터를 함께 학습시켰습니다. 이런 단계적 사전학습과 파인튜닝 방식은 현재 비전 언어 모델을 학습하는 가장 일반적이고 효과적인 접근법으로 사용되고 있습니다.
+예를 들어, LLaVA는 CLIP 이미지 인코더, 멀티모달 프로젝터, 그리고 Vicuna 텍스트 디코더로 구성됩니다. LLaVA의 저자들은 이미지와 캡션으로 구성된 데이터셋을 GPT-4에 입력하여, 캡션과 이미지에 관련된 질문을 자동으로 생성했습니다. 그 후, 이미지 인코더와 텍스트 디코더는 고정(freeze)하고, 멀티모달 프로젝터만 학습시켰습니다. 이때 모델에 이미지와 GPT-4가 생성한 질문을 입력하고, 모델의 출력이 정답 캡션과 일치하도록 학습했습니다. 프로젝터의 사전학습이 끝난 뒤에는 이미지 인코더를 계속 고정한 채, 텍스트 디코더와 프로젝터를 함께 학습시켰습니다. 이런 단계적 사전학습과 파인튜닝 방식은 현재 비전 언어 모델을 학습하는 가장 일반적이고 효과적인 접근법으로 사용되고 있습니다.
 
 <p align="center">
  <img src="https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/blog/vlm/vlm-structure.png" alt="VLM Structure" style="width: 90%; height: auto;"><br>
@@ -147,10 +147,10 @@ output = model.generate(**inputs, max_new_tokens=100)
 print(processor.decode(output[0], skip_special_tokens=True))
 ```
 
-## TRL를 활용해 비전 언어 모델 파인튜닝하기
+## TRL을 활용해 비전 언어 모델 파인튜닝하기
 
-[TRL](https://github.com/huggingface/trl)의 `SFTTrainer`가 이제 비전 언어 모델을 실험적으로 지원하기 시작했습니다! 여기서는 [llava-instruct](https://huggingface.co/datasets/HuggingFaceH4/llava-instruct-mix-vsft) 데이터셋을 사용해 [Llava 1.5 VLM](https://huggingface.co/llava-hf/llava-1.5-7b-hf) 모델에 대해 SFT를 수행하는 예시를 제공합니다. 이 데이터셋은 26만개의 이미지-대화 쌍으로 구성되어 있습니다.
-데이터셋은 사용자와 어시스턴트 간의 상호작용을 메시지 시퀀스 형태로 구성하고 있습니다. 예를 들어, 각 대화는 사용자가 특정 이미지에 대해 질문하는 형식으로 해당 이미지와 짝지어져 있습니다.
+[TRL](https://github.com/huggingface/trl)의 `SFTTrainer`가 이제 비전 언어 모델을 실험적으로 지원하기 시작했습니다! 여기서는 [llava-instruct](https://huggingface.co/datasets/HuggingFaceH4/llava-instruct-mix-vsft) 데이터셋을 사용해 [Llava 1.5 VLM](https://huggingface.co/llava-hf/llava-1.5-7b-hf) 모델에 대해 SFT를 수행하는 예시를 제공합니다. 이 데이터셋은 26만 개의 이미지-대화 쌍으로 구성되어 있습니다.
+데이터셋은 사용자와 어시스턴트 간의 상호작용을 메시지 시퀀스 형태로 구성합니다. 예를 들어, 각 대화는 사용자가 질문하는 이미지와 짝지어져 있습니다.
 
 이 실험적인 지원을 VLM 학습에 적용해보기 위해서는 `pip install -U trl`로 TRL의 최신 버전을 설치해야 합니다.
 전체 예시 스크립트는 [여기](https://github.com/huggingface/trl/blob/main/examples/scripts/vsft_llava.py)서 확인할 수 있습니다.
@@ -250,6 +250,6 @@ trainer.push_to_hub()
 ```
 학습된 모델은 [여기](https://huggingface.co/HuggingFaceH4/vsft-llava-1.5-7b-hf-trl)에서 확인할 수 있습니다.
 
-**Acknowledgements**
+**감사의 글**
 
 이 블로그 게시물에 대한 리뷰와 제안을 해주신 Pedro Cuenca, Lewis Tunstall, Kashif Rasul, 그리고 Omar Sanseviero께 감사드립니다.
